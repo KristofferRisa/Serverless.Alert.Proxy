@@ -12,7 +12,10 @@ Create new Incoming webhook integrations under _administration_ and _Integration
 Clone this GitHub repository and deploy it to a new Azure Functions. There are many ways of deploying; one way is to eploy through the VS code. 
 
 ### 4. configure Azure Functions
-In the _Applications Settings_ in the Azure portal for your newly created Azure Function, add this parameter with your own rocket chat webhook url: rocketchaturl
+In the _Applications Settings_ in the Azure portal for your newly created Azure Function, add these parameters: 
+* rocketchaturl = the webhook url from rocket chat
+* user = the username set in grafana
+* password = the password set in grafana
 
 ## Configure Grafana
 Add a new channel under the Alert and Notification channels in Grafana. Choose the type "webhook" and enter the Azure function Api URL. 

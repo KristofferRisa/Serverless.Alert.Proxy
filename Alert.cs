@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 using System.Collections.Generic;
+using System;
 
 namespace Serverless.Alert.Proxy
 {
@@ -21,6 +22,23 @@ namespace Serverless.Alert.Proxy
         {
             log.LogInformation("Alert proxy HTTP trigger function processed a request.");
 
+            var basic = req.Headers["Authorization"];
+            if(basic.Count > 0)
+            {
+               //check basic auth
+               var username = System.Environment.GetEnvironmentVariable("user");
+               var pass = System.Environment.GetEnvironmentVariable("password");
+               var bas64userpass = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes($"{username}:{pass}"));
+               if(basic != $"Basic {bas64userpass}")
+               {
+                    return new BadRequestObjectResult("Wrong username or password.");
+               }
+            }
+            else 
+            {
+                return new BadRequestObjectResult("No authentication provided.");
+            }
+            
             //reading the post data
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
